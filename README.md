@@ -3,7 +3,7 @@ binarius
 
 A binary parser and serializer for Node.js.
 
-**Binarius is a work in progress... Please stay tuned for the awesomeness.***
+**Binarius is a work in progress... Please stay tuned for the awesomeness.**
 
 Parser
 ------
