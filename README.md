@@ -16,7 +16,7 @@ var parser = require('binarius').Parser;
 
 console.dir(parser.parse(buf));
 
-//var obj = { 
+//Object<{ 
 //  startOfIMCommand: 0x02, 
 //  type: 0x50, 
 //  fromAddress: { 
@@ -39,7 +39,7 @@ console.dir(parser.parse(buf));
 //    primary: 0x12,
 //    secondary: 0x00
 //  }
-//};
+//}>
 ```
 
 Serializer
@@ -76,5 +76,6 @@ var serializer = require('binarius').Serializer;
 
 console.dir(serializer.serialize(obj));
 
-//var buf = new Buffer([ 0x02, 0x50, 0x01, 0x01, 0x01, 0xAA, 0xAA, 0xAA, 0x0F, 0x12, 0x00 ]);
+//Buffer< 0x02, 0x50, 0x01, 0x01, 0x01, 0xAA, 0xAA, 0xAA, 0x0F, 0x12, 0x00 :w
+>
 ```
