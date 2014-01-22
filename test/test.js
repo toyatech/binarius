@@ -1,54 +1,25 @@
-var Stream = require('stream'),
-  binarius = require('../binarius');
+var assert = require('assert')
+  , Parser = require('../lib/parser.js').Parser
+  , InsteonStructure = require('./insteon-tests').InsteonStructure
+  , InsteonMessages = require('./insteon-tests').InsteonMessages;
 
-var insteonMessages = [
-  [0x02,0x62,0x01,0x02,0x03,0x00,0x0F,0x00], // send standard direct
-  [0x02,0x62,0xAA,0xAA,0xAA,0x83,0x0F,0x00], // send standard broadcast
-  [0x02,0x62,0x01,0x02,0x03,0x24,0x0F,0x00], // send standard ACK of direct
-  [0x02,0x62,0xFF,0xFF,0xFF,0xA7,0x0F,0x00], // send standard NAK of direct
-  [0x02,0x62,0x01,0x02,0x03,0xC8,0x0F,0x00], // send ALL-Link broadcast
-  [0x02,0x62,0x01,0x02,0x03,0x4B,0x0F,0x00], // send ALL-Link cleanup
-  [0x02,0x62,0x01,0x02,0x03,0x6C,0x0F,0x00], // send ACK of ALL-LINK cleanup
-  [0x02,0x62,0x01,0x02,0x03,0xEF,0x0F,0x00]
-];
-
-insteonMessages.forEach(function(message) {
-  var insteonMessage = new Buffer(message);
-  var insteonParser = new binarius.Parser(
-    insteonMessage, { 
-      command: { 
-        primary: 'uint8', 
-        secondary: 'uint8' 
-      }, 
-      messageFlags: { 
-        messageType: 3, 
-        extended: 1,
-        hopsLeft: 2,
-        maxHops: 2
-      },
-      address: {
-        high: 'uint8',
-        middle: 'uint8',
-        low: 'uint8',
-      },
-      serialCommand: {
-        type: 'uint8',
-        address: 'address',
-        messageFlags: 'messageFlags',
-        command: 'command'
-      },
-      stx: 'uint8',
-      error: {
-        error: 'uint8'
-      },
-      data: function() {
-        var stx = this.parse('stx');
-        if (stx === 0x02) return this.parse('serialCommand');
-        return this.parse('error');
-      }
-    }
-  );
-
-  console.log(insteonParser.parse('data'));
-
+describe('Parser', function() {
+  var data = new Buffer(InsteonMessages[0]);
+  var parser = new Parser(data, {structure: InsteonStructure});
+  describe('#parse', function() {
+    var insteonMessage = parser.parse('data');
+    console.log(insteonMessage);
+    it('should convert a buffer to an object', function() {
+      assert.equal(0x62, insteonMessage.type);
+      assert.equal(0x01, insteonMessage.address.high);
+      assert.equal(0x02, insteonMessage.address.middle);
+      assert.equal(0x03, insteonMessage.address.low);
+      assert.equal(0, insteonMessage.messageFlags.messageType);
+      assert.equal(0, insteonMessage.messageFlags.extended);
+      assert.equal(0, insteonMessage.messageFlags.hopsLeft);
+      assert.equal(0, insteonMessage.messageFlags.maxHops);
+      assert.equal(0x0F, insteonMessage.command.primary);
+      assert.equal(0x00, insteonMessage.command.secondary);
+    });
+  });
 });
