@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 var assert = require('assert')
   , Parser = require('../lib/parser.js').Parser
   , InsteonStructure = require('./insteon-tests').InsteonStructure
@@ -23,3 +24,7 @@ describe('Parser', function() {
     });
   });
 });
+=======
+require('./test-decoder');
+require('./test-encoder');
+>>>>>>> fb8ac87a24c81cbe3f60dae514869411ef8cb27a
