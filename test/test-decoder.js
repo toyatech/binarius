@@ -23,12 +23,25 @@ describe('Decoder', function() {
       }
       var val = buf['read' + type](0);
       describe('#decode() a ' + type + ' type', function() {
-        it('should return an object with data key equal to ' + val, function() {
+        it('should return a value equal to ' + val, function() {
           decoder = new Decoder({data: type.toLowerCase()});
           var obj = decoder.decode(buf, 'data');
           assert.equal(val, obj);
         });
       });
-    }); 
+    });
+  for (var i = 1;i <= 8;i++) {
+    var buf = new Buffer([i]);
+    describe('#decode() ' + i + ' bits', function() {
+      var len = i;
+      var val = buf.readUInt8(0) >> (8 - 0 - len) & ((1 << len) - 1);
+      var struct = {data:i};
+      it('should return a value equal to ' + val, function() {
+        decoder = new Decoder(struct);
+        var obj = decoder.decode(buf, 'data');
+        assert.equal(val, obj);
+      });
+    });
+  }
 });
         
