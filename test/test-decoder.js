@@ -31,10 +31,9 @@ describe('Decoder', function() {
       });
     });
   for (var i = 1;i <= 8;i++) {
-    var buf = new Buffer([i]);
     describe('#decode() ' + i + ' bits', function() {
-      var len = i;
-      var val = buf.readUInt8(0) >> (8 - 0 - len) & ((1 << len) - 1);
+      var buf = new Buffer([i]);
+      var val = buf.readUInt8(0) >> (8 - 0 - i) & ((1 << i) - 1);
       var struct = {data:i};
       it('should return a value equal to ' + val, function() {
         decoder = new Decoder(struct);
