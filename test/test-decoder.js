@@ -42,5 +42,33 @@ describe('Decoder', function() {
       });
     });
   }
+  describe('#decode() complex structures', function() {
+    it('should return a complex object', function() {
+      decoder = new Decoder({data: { 
+        one: 'uint8',
+        two: 'uint8',
+        three: 'uint8',
+        four: {
+          five: 'uint8',
+          six: 'uint8'
+        },
+        seven: 'uint8',
+        eight: {
+          nine: 'uint8',
+          zero: 'uint8'
+        }
+      }});
+      var buf = new Buffer([0x01,0x02,0x03,0x05,0x06,0x07,0x09,0x00]);
+      var obj = decoder.decode(buf, 'data');
+      assert.equal(1, obj.one);
+      assert.equal(2, obj.two);
+      assert.equal(3, obj.three);
+      assert.equal(5, obj.four.five);
+      assert.equal(6, obj.four.six);
+      assert.equal(7, obj.seven);
+      assert.equal(9, obj.eight.nine);
+      assert.equal(0, obj.eight.zero);
+    });
+  });
 });
         
