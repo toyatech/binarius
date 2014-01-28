@@ -2,9 +2,12 @@ var assert = require('assert')
   , types = require('../lib/types')
   , Decoder = require('../lib/decoder');
 
+var PRIMATIVE_TYPES = types.PRIMATIVE_TYPES;
+var BIT_TYPES = types.BIT_TYPES;
+
 describe('Decoder', function() {
   var decoder = new Decoder({data: 'uint8'});
-  Object.keys(types.PRIMATIVE_TYPES)
+  Object.keys(PRIMATIVE_TYPES)
     .forEach(function(type) {
       describe('#_struct.' + type.toLowerCase() + '()', function() {
         it('should be an instance of Function', function() {
@@ -13,9 +16,18 @@ describe('Decoder', function() {
         });
       });
     });
-  Object.keys(types.PRIMATIVE_TYPES)
+  Object.keys(BIT_TYPES)
     .forEach(function(type) {
-      var len = types.PRIMATIVE_TYPES[type];
+      describe('#_struct.' + type.toLowerCase() + '()', function() {
+        it('should be an instance of Funcction', function() {
+          assert.equal(true,
+            decoder._struct[type.toLowerCase()] instanceof Function);
+        });
+      });
+    });
+  Object.keys(PRIMATIVE_TYPES)
+    .forEach(function(type) {
+      var len = PRIMATIVE_TYPES[type];
       var buf = new Buffer(len);
       for (var i = 0;i < len;i++) {
         buf[i] = i;
@@ -29,11 +41,11 @@ describe('Decoder', function() {
         });
       });
     });
-  Object.keys(types.BIT_TYPES)
+  Object.keys(BIT_TYPES)
     .forEach(function(type) {
       describe('#decode() a ' + type + ' type', function() {
-        var buf = new Buffer([types.BIT_TYPES[type]]);
-        var val = buf.readUInt8(0) >> (8 - 0 - types.BIT_TYPES[type]) & ((1 << types.BIT_TYPES[type]) - 1);
+        var buf = new Buffer([BIT_TYPES[type]]);
+        var val = buf.readUInt8(0) >> (8 - 0 - BIT_TYPES[type]) & ((1 << BIT_TYPES[type]) - 1);
         var struct = {data: type.toLowerCase()};
         console.log('val: ' + val);
         console.log('struct: ' + struct);
