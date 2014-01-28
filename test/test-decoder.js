@@ -1,11 +1,10 @@
 var assert = require('assert')
+  , types = require('../lib/types')
   , Decoder = require('../lib/decoder');
-
-var PRIMATIVE_TYPES = require('../lib/types').PRIMATIVE_TYPES;
 
 describe('Decoder', function() {
   var decoder = new Decoder({data: 'uint8'});
-  Object.keys(PRIMATIVE_TYPES)
+  Object.keys(types.PRIMATIVE_TYPES)
     .forEach(function(type) {
       describe('#_struct.' + type.toLowerCase() + '()', function() {
         it('should be an instance of Function', function() {
@@ -14,9 +13,9 @@ describe('Decoder', function() {
         });
       });
     });
-  Object.keys(PRIMATIVE_TYPES)
+  Object.keys(types.PRIMATIVE_TYPES)
     .forEach(function(type) {
-      var len = PRIMATIVE_TYPES[type];
+      var len = types.PRIMATIVE_TYPES[type];
       var buf = new Buffer(len);
       for (var i = 0;i < len;i++) {
         buf[i] = i;
@@ -30,18 +29,21 @@ describe('Decoder', function() {
         });
       });
     });
-  for (var i = 1;i <= 8;i++) {
-    describe('#decode() ' + i + ' bits', function() {
-      var buf = new Buffer([i]);
-      var val = buf.readUInt8(0) >> (8 - 0 - i) & ((1 << i) - 1);
-      var struct = {data:i};
-      it('should return a value equal to ' + val, function() {
-        decoder = new Decoder(struct);
-        var obj = decoder.decode(buf, 'data');
-        assert.equal(val, obj);
+  Object.keys(types.BIT_TYPES)
+    .forEach(function(type) {
+      describe('#decode() a ' + type + ' type', function() {
+        var buf = new Buffer([types.BIT_TYPES[type]]);
+        var val = buf.readUInt8(0) >> (8 - 0 - types.BIT_TYPES[type]) & ((1 << types.BIT_TYPES[type]) - 1);
+        var struct = {data: type.toLowerCase()};
+        console.log('val: ' + val);
+        console.log('struct: ' + struct);
+        it('should return a value equal to ' + val, function() {
+          decoder = new Decoder(struct);
+          var obj = decoder.decode(buf, 'data');
+          assert.equal(val, obj);
+        });
       });
     });
-  }
   describe('#decode() complex structures', function() {
     it('should return a complex object', function() {
       decoder = new Decoder({data: { 

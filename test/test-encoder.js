@@ -1,7 +1,9 @@
 var assert = require('assert')
+  , types = require('../lib/types')
   , Encoder = require('../lib/encoder');
 
-var PRIMATIVE_TYPES = require('../lib/types').PRIMATIVE_TYPES;
+var PRIMATIVE_TYPES = types.PRIMATIVE_TYPES;
+var BIT_TYPES = types.BIT_TYPES;
 
 describe('Encoder', function() {
   var encoder = new Encoder();
@@ -10,6 +12,15 @@ describe('Encoder', function() {
       describe('#_struct.' + type.toLowerCase() + '()', function() {
         it('should be an instance of Function', function() {
           assert.equal(true, 
+            encoder._struct[type.toLowerCase()] instanceof Function);
+        });
+      });
+    });
+  Object.keys(BIT_TYPES)
+    .forEach(function(type) {
+      describe('#_struct.' + type.toLowerCase() + '()', function() {
+        it('should be an instance of Function', function() {
+          assert.equal(true,
             encoder._struct[type.toLowerCase()] instanceof Function);
         });
       });
