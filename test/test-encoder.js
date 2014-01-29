@@ -44,18 +44,19 @@ describe('Encoder', function() {
         );
       });
     });
-  for (var i = 1;i <= 32;i++) {
-    describe('#encode() ' + i + ' bits', function() {
-      var buf = new Buffer([i]);
-      var val = buf.readUInt8(0) >> (8 - 0 - i) & ((1 << i) - 1);
-      var obj = {data:val};
-      var struct = {data: 'bit'+i};
-      it('should return a value equal to ' + val, function() {
-        encoder = new Encoder(struct);
-        var ret = encoder.encode(obj, 'data');
-        assert.equal(val, ret.readUInt8(0) >> (8 - 0 - i) & ((1 << i) - 1));
+  Object.keys(BIT_TYPES)
+    .forEach(function(type) {
+      describe('#encode() a ' + type + ' type', function() {
+        var buf = new Buffer([BIT_TYPES[type]]);
+        var val = buf.readUInt8(0) >> (8 - 0 - BIT_TYPES[type]) & ((1 << BIT_TYPES[type]) - 1);
+        var obj = {data:val};
+        var struct = {data: 'bit'+BIT_TYPES[type]};
+        it('should return a value equal to ' + val, function() {
+          encoder = new Encoder(struct);
+          var ret = encoder.encode(obj, 'data');
+          assert.equal(val, ret.readUInt8(0) >> (8 - 0 - BIT_TYPES[type]) & ((1 << BIT_TYPES[type]) - 1));
+        });
       });
     });
-  }
 });
         

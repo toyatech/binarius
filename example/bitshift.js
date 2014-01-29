@@ -27,7 +27,7 @@ Object.keys(BIT_TYPES)
     var val = buf['readUInt'+len+end](0);
     console.log('len: ' + len + ' val: ' + val + ' : ' + val.toString(2).lpad("0", len));
   });
-for (var i = 0; i <= 4294967295;i+=4096) {
+for (var i = 0; i <= 4294967295;i+=16384) {
   var len = Math.ceil(i/8)
   len = len > 2 ? 32 : len * 8;
   len = len == 0 ? 8 : len;

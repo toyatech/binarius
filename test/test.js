@@ -1,2 +1,2 @@
 require('./test-decoder');
-require('./test-encoder');
+//require('./test-encoder');
